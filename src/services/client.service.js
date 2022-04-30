@@ -1,6 +1,8 @@
 const Joi = require('joi');
 const {Client} = require('../models');
 
+const {ApiFailResponse} = require('../utils/api.response');
+
 const ClientSchema = Joi.object({
     name: Joi.string().min(4).max(30).required(),
     lastName: Joi.string().min(4).max(50).required(),
@@ -13,7 +15,7 @@ const createNewClient = async (user) => {
         let {error} = ClientSchema.validate(user);
 
         if(error) {
-            throw new Error(error?.details[0]?.message)
+            throw new ApiFailResponse(eerror?.details[0]?.message, 422);
         }
 
         let newClient = await Client.create({...user, dateBirth: new Date(user.dateBirth)});
@@ -22,7 +24,7 @@ const createNewClient = async (user) => {
 
     } catch (error) {
         
-        throw error;
+        throw new ApiFailResponse(error?.message, 500);
     }
 
 };
@@ -34,15 +36,15 @@ const kpiClients = async () => {
 
         let ageClients = clients.map(client => client.age);
 
-        let averageAge = ageClients.reduce((prev, curr) => prev + parseInt(curr, 10), 0);
+        let averageAge = (ageClients.reduce((prev, curr) => prev + parseInt(curr, 10), 0) / ageClients.length).toFixed(2);
 
         return {
             "average": averageAge,
-            "standard deviation": standardDev(ageClients) 
+            "standardDeviation": standardDev(ageClients) 
         }
 
     } catch (error) {
-        throw error;
+        throw new ApiFailResponse(error?.message, 422);
     }
 }
 
@@ -59,7 +61,7 @@ const listClients = async () => {
         return clientsWithPosibleDeath;
 
     } catch (error) {
-        throw error;
+        throw new ApiFailResponse(error?.message, 422);
     }
 };
 
@@ -80,6 +82,7 @@ let posibleDeathDate = (dateBirth) => {
 
     let posibleDeath = new Date(dateBirth);
 
+    // 79 es la esperanza de vida en Peru
     posibleDeath.setFullYear(posibleDeath.getFullYear() + 79);
                 
     return posibleDeath;

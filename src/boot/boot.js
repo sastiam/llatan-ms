@@ -2,9 +2,10 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 
+const swaggerUi = require('swagger-ui-express');
+const apiDocumentation = require('../docs/apidoc');
+
 const routes = require('../routes');
-
-
 
 const app = express();
 
@@ -29,6 +30,8 @@ app.use(
 
 
 app.use("/", routes);
+app.use('/documentation', swaggerUi.serve, swaggerUi.setup(apiDocumentation));
+
 
 app.use((err, req, res, next) => {
 
