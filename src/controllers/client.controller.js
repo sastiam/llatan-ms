@@ -14,7 +14,33 @@ const createNewClient = async (req, res, next) => {
     }
 }
 
+const kpiClients = async (req, res, next) => {
+    try {
+        
+        let kpi = await ClientService.kpiClients();
+
+        res.status(200).json(kpi);
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+const listClients = async (req, res, next) => {
+    try {
+        
+        let clients = await ClientService.listClients();
+
+        res.status(200).json(clients);
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 
 module.exports = {
-    createNewClient
+    createNewClient,
+    kpiClients,
+    listClients
 }
