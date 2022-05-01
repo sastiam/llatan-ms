@@ -13,5 +13,5 @@ db.conn.sync({ force: true}).then(() => {
 
 
 
-listenApp(APP_PORT, APP_URL);
+listenApp(APP_PORT || process.env.PORT, APP_URL);
 
