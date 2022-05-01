@@ -21,6 +21,10 @@ const apiDocumentation = {
       {
         url: 'http://localhost:3000/api/',
         description: 'Local Server',
+      },
+      {
+        url: process.env.APP_URL + '/api/',
+        description: 'Cloud server'
       }
     ],
     paths: {
